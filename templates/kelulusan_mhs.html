@@ -37,8 +37,8 @@
                                 Klasifikasi Kelulusan Mahasiswa menggunakan algoritma Logistic Regression
                             </p>
                             <div class="form-group mb-4">
-                                <button class="btn btn-primary" type="button" onclick="generateRandomNumber()">Generate
-                                    random data</button>
+                                <button class="btn btn-primary" type="button" onclick="randomNumber1()">Generate
+                                    Random Data</button>
                             </div>
                             <form id="myForm" method="post" action="{{ url_for('kelulusanMhs') }}">
                                 <div class="input-group mb-3">
@@ -99,7 +99,7 @@
 
                             <p class="card-title-desc">
                                 <b>Informasi:</b><br>
-                                Inputan data adalah desimal, for contoh: 3.43<br>
+                                Inputan data berupa desimal, contoh: 3.43<br>
                             </p>
                             {% if data %}
                             <h3>

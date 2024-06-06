@@ -14,14 +14,15 @@ new_timezone = pytz.timezone('Asia/Jakarta')
 
 # load file pickle nya
 pickleFileOne = './models/kelulusan.pkl'
-# clusteringPickle = './models/bank_transaction.pkl'
+pickleFileTwo = './models/water_potability.pkl'
+
 with open(pickleFileOne, 'rb') as file:
-    classModel = pickle.load(file)
+    modelLogistic = pickle.load(file)
     print(f"File {pickleFileOne} loaded!")
 
-# with open(clusteringPickle, 'rb') as file:
-#     clusterModel = pickle.load(file)
-#     print(f"File {clusteringPickle} loaded!")
+with open(pickleFileTwo, 'rb') as file:
+    modelRandomForest = pickle.load(file)
+    print(f"File {pickleFileTwo} loaded!")
 
 app = Flask(__name__)
 
@@ -62,7 +63,7 @@ def kelulusanMhs():
 
     # Masukkan nilai-nilai ke dalam array
     array_values = [list(values.values())]
-    prediction = classModel.predict(array_values)
+    prediction = modelLogistic.predict(array_values)
     datas = {
         'inputs': array_values,
         # 'k_params': int(classModel.n_neighbors),
@@ -70,26 +71,21 @@ def kelulusanMhs():
     }
     return render_template('kelulusan_mhs.html', data=datas)
 
-# @app.route("/clustering", methods=['GET', 'POST'])
-# def clustering():
-#     if request.method == "GET":
-#         return render_template('clustering.html')
-#     # mengambil semua value dari form input html
-#     values = [float(x) for x in request.form.values()]
-#     # masukkan value tadi ke array
-#     array_values = [np.array(values)]
-#     prediction = clusterModel.predict(array_values)
-#     print(enumerate(clusterModel.cluster_centers_))
-#     print(clusterModel.cluster_centers_[0])
-    
-#     datas = {
-#         'inputs': array_values,
-#         'n_cluster': int(clusterModel.n_clusters),
-#         'cluster' : prediction,
-#         'centroids' : enumerate(clusterModel.cluster_centers_),
-#         'inertia': clusterModel.inertia_
-#     }
-#     return render_template('clustering.html', data=datas)
+@app.route("/water-potability", methods=['GET', 'POST'])
+def waterPotability():
+    if request.method == "GET":
+        return render_template('water_potability.html')
+    # mengambil semua value dari form input html
+    values = [float(x) for x in request.form.values()]
+    # masukkan value tadi ke array
+    array_values = [values]
+    # print(array_values[0])
+    prediction = modelRandomForest.predict(array_values)
+    datas = {
+        'inputs': array_values,
+        'predict' : prediction[0]
+    }
+    return render_template('water_potability.html', data=datas)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
