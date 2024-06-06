@@ -1,0 +1,98 @@
+from flask import Flask, render_template, request
+from datetime import datetime
+import pickle
+import pytz
+import numpy as np
+
+current_time = datetime.now()
+# Mendefinisikan zona waktu awal (misalnya UTC)
+original_timezone = pytz.UTC
+
+# Mendefinisikan zona waktu baru 
+new_timezone = pytz.timezone('Asia/Jakarta')
+
+
+# load file pickle nya
+pickleFileOne = './models/kelulusan.pkl'
+# clusteringPickle = './models/bank_transaction.pkl'
+with open(pickleFileOne, 'rb') as file:
+    classModel = pickle.load(file)
+    print(f"File {pickleFileOne} loaded!")
+
+# with open(clusteringPickle, 'rb') as file:
+#     clusterModel = pickle.load(file)
+#     print(f"File {clusteringPickle} loaded!")
+
+app = Flask(__name__)
+
+@app.route("/", methods=['GET'])
+def index():
+    # Mengonversi waktu ke zona waktu baru
+    originalTimezone = original_timezone.localize(current_time)
+    timeNow = originalTimezone.astimezone(new_timezone)
+    datas = {
+        # Mendapatkan alamat IP pengguna
+        'user_ip' : request.headers.get('X-Forwarded-For', request.remote_addr),
+        'date': current_time.strftime('%d-%m-%Y'),
+        'time': current_time.strftime('%H:%M:%s')
+    }
+    return render_template('index.html', data=datas)
+
+@app.route("/kelulusan-mahasiswa", methods=['GET', 'POST'])
+def kelulusanMhs():
+    if request.method == "GET":
+        return render_template('kelulusan_mhs.html')
+    int_fields = ['gender', 'age', 'student_status', 'married_status']  # Contoh nama field yang tetap int
+
+    # Fungsi untuk mengonversi nilai form input
+    def convert_value(name, value):
+        try:
+            if name in int_fields:
+                return int(value)
+            else:
+                return float(value)
+        except ValueError:
+            return None  # atau nilai default yang diinginkan jika konversi gagal
+
+    # Mengambil nilai-nilai dari form
+    values = {name: convert_value(name, value) for name, value in request.form.items()}
+    
+    # Filter out None values if conversion fails
+    values = {name: value for name, value in values.items() if value is not None}
+
+    # Masukkan nilai-nilai ke dalam array
+    array_values = [list(values.values())]
+    prediction = classModel.predict(array_values)
+    datas = {
+        'inputs': array_values,
+        # 'k_params': int(classModel.n_neighbors),
+        'predict' : prediction[0]
+    }
+    return render_template('kelulusan_mhs.html', data=datas)
+
+# @app.route("/clustering", methods=['GET', 'POST'])
+# def clustering():
+#     if request.method == "GET":
+#         return render_template('clustering.html')
+#     # mengambil semua value dari form input html
+#     values = [float(x) for x in request.form.values()]
+#     # masukkan value tadi ke array
+#     array_values = [np.array(values)]
+#     prediction = clusterModel.predict(array_values)
+#     print(enumerate(clusterModel.cluster_centers_))
+#     print(clusterModel.cluster_centers_[0])
+    
+#     datas = {
+#         'inputs': array_values,
+#         'n_cluster': int(clusterModel.n_clusters),
+#         'cluster' : prediction,
+#         'centroids' : enumerate(clusterModel.cluster_centers_),
+#         'inertia': clusterModel.inertia_
+#     }
+#     return render_template('clustering.html', data=datas)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
+    # app.run(debug=True) 
+    
+

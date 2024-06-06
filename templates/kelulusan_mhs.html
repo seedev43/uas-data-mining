@@ -1,0 +1,162 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Klasifikasi Kelulusan Mahasiswa{% endblock %}
+
+{% block content %}
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Klasifikasi Kelulusan Mahasiswa</h4>
+
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active">Klasifikasi</li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <!-- start row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">
+                                Klasifikasi Kelulusan Mahasiswa menggunakan algoritma Logistic Regression
+                            </p>
+                            <div class="form-group mb-4">
+                                <button class="btn btn-primary" type="button" onclick="generateRandomNumber()">Generate
+                                    random data</button>
+                            </div>
+                            <form id="myForm" method="post" action="{{ url_for('kelulusanMhs') }}">
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="gender" id="gender" required>
+                                        <option value="">Jenis Kelamin</option>
+                                        <option value="0">Laki-laki</option>
+                                        <option value="1">Perempuan</option>
+                                    </select>
+                                    <select class="form-select" name="student_status" id="student_status" required>
+                                        <option value="">Status Mahasiswa</option>
+                                        <option value="0">Bekerja</option>
+                                        <option value="1">Mahasiswa</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="married_status" id="married_status" required>
+                                        <option value="">Status Nikah</option>
+                                        <option value="0">Belum Menikah</option>
+                                        <option value="1">Menikah</option>
+                                    </select>
+                                    <input type="number" min="0" max="99" name="age" class="form-control"
+                                        placeholder="Umur" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="0" max="4" step="0.01" name="ips1" class="form-control"
+                                        placeholder="Nilai IPS 1" required>
+                                    <input type="number" min="0" max="4" step="0.01" name="ips2" class="form-control"
+                                        placeholder="Nilai IPS 2" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="0" max="4" step="0.01" name="ips3" class="form-control"
+                                        placeholder="Nilai IPS 3" required>
+                                    <input type="number" min="0" max="4" step="0.01" name="ips4" class="form-control"
+                                        placeholder="Nilai IPS 4" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="0" max="4" step="0.01" name="ips5" class="form-control"
+                                        placeholder="Nilai IPS 5" required>
+                                    <input type="number" min="0" max="4" step="0.01" name="ips6" class="form-control"
+                                        placeholder="Nilai IPS 6" required>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="0" max="4" step="0.01" name="ips7" class="form-control"
+                                        placeholder="Nilai IPS 7" required>
+                                    <input type="number" min="0" max="4" step="0.01" name="ips8" class="form-control"
+                                        placeholder="Nilai IPS 8" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <input type="number" min="0" max="4" step="0.01" name="ipk" class="form-control"
+                                        placeholder="Jumlah IPK" required>
+                                </div>
+
+                                <div class="d-grid mt-3 mb-2">
+                                    <button type="submit"
+                                        class="btn btn-primary waves-effect waves-light">Submit</button>
+                                </div>
+                            </form>
+
+                            <p class="card-title-desc">
+                                <b>Informasi:</b><br>
+                                Inputan data adalah desimal, for contoh: 3.43<br>
+                            </p>
+                            {% if data %}
+                            <h3>
+                                Hasil <br>
+                                Status Kelulusan :
+                                <b>{{ "Terlambat" if data.predict else "Tepat Waktu" }}</b>
+                            </h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Status Kelulusan</th>
+                                            <th>Jenis Kelamin</th>
+                                            <th>Status Mahasiswa</th>
+                                            <th>Status Nikah</th>
+                                            <th>Umur</th>
+                                            <th>IPS 1</th>
+                                            <th>IPS 2</th>
+                                            <th>IPS 3</th>
+                                            <th>IPS 4</th>
+                                            <th>IPS 5</th>
+                                            <th>IPS 6</th>
+                                            <th>IPS 7</th>
+                                            <th>IPS 8</th>
+                                            <th>IPK</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">{{ "Terlambat" if data.predict else "Tepat Waktu" }}</th>
+                                            {% for value in data.inputs %}
+                                            <td>{{ "Perempuan" if value[0] else "Laki-laki" }}</td>
+                                            <td>{{ "Mahasiswa" if value[1] else "Bekerja" }}</td>
+                                            <td>{{ "Menikah" if value[2] else "Belum Menikah" }}</td>
+                                            <td>{{ value[3] }}</td>
+                                            <td>{{ value[4] }}</td>
+                                            <td>{{ value[5] }}</td>
+                                            <td>{{ value[6] }}</td>
+                                            <td>{{ value[7] }}</td>
+                                            <td>{{ value[8] }}</td>
+                                            <td>{{ value[9] }}</td>
+                                            <td>{{ value[10] }}</td>
+                                            <td>{{ value[11] }}</td>
+                                            <td>{{ value[12] }}</td>
+                                            <td>{{ value[13] }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            {% endblock %}
