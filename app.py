@@ -63,10 +63,10 @@ def kelulusanMhs():
 
     # Masukkan nilai-nilai ke dalam array
     array_values = [list(values.values())]
+    print(array_values)
     prediction = modelLogistic.predict(array_values)
     datas = {
         'inputs': array_values,
-        # 'k_params': int(classModel.n_neighbors),
         'predict' : prediction[0]
     }
     return render_template('kelulusan_mhs.html', data=datas)
