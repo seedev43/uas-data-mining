@@ -115,8 +115,8 @@
                                             <th>Status Kelulusan</th>
                                             <th>Jenis Kelamin</th>
                                             <th>Status Mahasiswa</th>
-                                            <th>Status Nikah</th>
                                             <th>Umur</th>
+                                            <th>Status Nikah</th>
                                             <th>IPS 1</th>
                                             <th>IPS 2</th>
                                             <th>IPS 3</th>
@@ -134,8 +134,8 @@
                                             {% for value in data.inputs %}
                                             <td>{{ "Perempuan" if value[0] else "Laki-laki" }}</td>
                                             <td>{{ "Mahasiswa" if value[1] else "Bekerja" }}</td>
-                                            <td>{{ "Menikah" if value[2] else "Belum Menikah" }}</td>
-                                            <td>{{ value[3] }}</td>
+                                            <td>{{ value[2] }}</td>
+                                            <td>{{ "Menikah" if value[3] else "Belum Menikah" }}</td>
                                             <td>{{ value[4] }}</td>
                                             <td>{{ value[5] }}</td>
                                             <td>{{ value[6] }}</td>
