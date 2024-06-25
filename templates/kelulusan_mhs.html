@@ -105,14 +105,14 @@
                             <h3>
                                 Hasil <br>
                                 Status Kelulusan :
-                                <b>{{ "Terlambat" if data.predict else "Tepat" }}</b>
+                                <b>{{ "TERLAMBAT" if data.predict else "TEPAT" }}</b>
                             </h3>
                             <div class="table-responsive">
                                 <table class="table table-striped mb-0">
 
                                     <thead>
                                         <tr>
-                                            <th>Status Kelulusan</th>
+                                            <!-- <th>Status Kelulusan</th> -->
                                             <th>Jenis Kelamin</th>
                                             <th>Status Mahasiswa</th>
                                             <th>Umur</th>
@@ -130,7 +130,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th scope="row">{{ data.predict }}</th>
+                                            <!-- <th scope="row">{{ data.predict }}</th> -->
                                             {% for value in data.inputs %}
                                             <td>{{ "Perempuan" if value[0] else "Laki-laki" }}</td>
                                             <td>{{ "Mahasiswa" if value[1] else "Bekerja" }}</td>
