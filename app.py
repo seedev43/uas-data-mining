@@ -14,7 +14,7 @@ new_timezone = pytz.timezone('Asia/Jakarta')
 
 # load file pickle nya
 pickleFileOne = './models/kelulusan.pkl'
-pickleFileTwo = './models/water_potability.pkl'
+pickleFileTwo = './models/potability.pkl'
 
 with open(pickleFileOne, 'rb') as file:
     modelLogistic = pickle.load(file)
